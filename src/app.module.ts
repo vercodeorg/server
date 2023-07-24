@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
+import { BadgesModule } from './badges/badges.module';
 
 @Module({
   imports: [
@@ -12,9 +14,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: "pedrohsj.dev",
       password: "14863421amw",
       database: "vercode_db",
-      entities: [],
+      autoLoadEntities: true,
       synchronize: true,
-    })
+    }),
+    UsersModule,
+    BadgesModule
   ],
   controllers: [AppController],
   providers: [AppService],
