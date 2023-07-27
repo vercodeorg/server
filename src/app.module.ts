@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
 import { BadgesModule } from './badges/badges.module';
+import { LevelsModule } from './levels/levels.module';
+import { ProjectsModule } from './projects/projects.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { BadgesModule } from './badges/badges.module';
       synchronize: true,
     }),
     UsersModule,
-    BadgesModule
+    BadgesModule,
+    LevelsModule,
+    ProjectsModule
   ],
   controllers: [AppController],
   providers: [AppService],
