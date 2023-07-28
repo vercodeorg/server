@@ -1,5 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
-import { User } from "./user.entity";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("badges")
 export class Badge {
@@ -13,6 +12,4 @@ export class Badge {
     @Column()
     image: string
 
-    @ManyToOne(() => User, (user) => user.badges)
-    user: User
 }
