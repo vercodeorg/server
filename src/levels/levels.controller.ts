@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
-import { LevelsService } from './levels.service';
+import { Body, Controller, Delete, Param, Patch, Post, Put } from '@nestjs/common';
 import { CreateLevelDTO } from 'src/dtos/levels/createLevel.dto';
 import { UpdateLevelDTO } from 'src/dtos/levels/updateLevel.dto';
+import { LevelsService } from './levels.service';
 
 @Controller('levels')
 export class LevelsController {
@@ -26,7 +26,7 @@ export class LevelsController {
     }
 
     @Patch('unlock/:id')
-    async unlockLevel(@Param('id') id: number, @Body() userCoins: number){
-        return await this.levelsService.unlock(id, userCoins)
+    async unlockLevel(@Param('id') id: number){
+        return await this.levelsService.unlock(id)
     }
 }
