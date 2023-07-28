@@ -1,5 +1,7 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Badge } from "./badge.entity";
+import { TechProgress } from "./techProgress.entity";
+import { Level } from "./level.entity";
 
 @Entity('users')
 export class User {
@@ -22,6 +24,16 @@ export class User {
     @CreateDateColumn({name: 'created_at'})
     createdAt: string
 
-    @OneToMany(() => Badge, (badge) => badge.user)
+    @ManyToMany(() => Badge)
+    @JoinTable()
     badges: Badge[]
+
+    @ManyToMany(() => TechProgress)
+    @JoinTable()
+    techProgress: TechProgress[]
+    
+    @ManyToMany(() => Level)
+    @JoinTable()
+    levels: Level[]
+    
 }
