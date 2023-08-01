@@ -3,8 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BadgesModule } from './badges/badges.module';
+import { ExercisesModule } from './exercises/exercises.module';
 import { LevelsModule } from './levels/levels.module';
 import { ProjectsModule } from './projects/projects.module';
+import { TechProgressModule } from './tech-progress/tech-progress.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -22,7 +24,9 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     BadgesModule,
     LevelsModule,
-    ProjectsModule
+    ProjectsModule,
+    TechProgressModule,
+    ExercisesModule
   ],
   controllers: [AppController],
   providers: [AppService],
