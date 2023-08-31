@@ -31,26 +31,7 @@ export class LevelsService {
     }
 
     async unlock(id: number) {
-        try {
-            const level = await this.levelsRepository.findOneBy({ id: id })
-            const user = await this.usersRepository.findOne({
-                relations: {
-                    levels: true
-                },
-                where: {
-                    levels: {
-                        id: id
-                    }
-                }
-            })
-            if (user.coins < level.unlockCost) {
-                throw new HttpException("You don't have coins enough", HttpStatus.BAD_REQUEST)
-            }
-            await this.levelsRepository.update(level, { status: Status.IN_PROGRESS })
-            return HttpStatus.OK
-        } catch (e) {
-            throw new BadRequestException(e)
-        }
+        
     }
 
 }
