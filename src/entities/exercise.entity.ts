@@ -1,4 +1,3 @@
-import { Technology } from "src/types/technology";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Project } from "./project.entity";
 import { UserExercise } from "./user-exercise.entity";
