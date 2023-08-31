@@ -10,7 +10,7 @@ export class UsersController {
 
     @Post()
     createUser(@Body() createUserDTO: CreateUserDTO){
-        this.usersService.create(createUserDTO)
+        this.usersService.createNewUserAndConnectExercises(createUserDTO)
     }
 
     @Delete(':id')
