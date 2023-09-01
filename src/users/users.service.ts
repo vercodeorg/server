@@ -16,7 +16,7 @@ export class UsersService {
         private dataSource: DataSource 
     ){}
 
-    async createNewUserAndConnectExercises(createUserDTO: CreateUserDTO){
+    async create(createUserDTO: CreateUserDTO){
         const queryRunner = this.dataSource.createQueryRunner();
 
         await queryRunner.connect();

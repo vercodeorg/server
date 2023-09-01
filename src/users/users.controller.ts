@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Inject, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, HttpException, HttpStatus, Inject, Param, Post, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from 'src/dtos/users/createUser.dto';
 import { UpdateUserDTO } from 'src/dtos/users/updateUser.dto';
@@ -9,8 +9,8 @@ export class UsersController {
     constructor(private usersService: UsersService){}
 
     @Post()
-    createUser(@Body() createUserDTO: CreateUserDTO){
-        this.usersService.createNewUserAndConnectExercises(createUserDTO)
+    async createUser(@Body() createUserDTO: CreateUserDTO){
+        await this.usersService.create(createUserDTO)
     }
 
     @Delete(':id')
