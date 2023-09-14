@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { CreateExerciseDTO } from 'src/dtos/exercises/createExercise.dto';
 import { UpdateExerciseDTO } from 'src/dtos/exercises/updateExercise.dto';
 import { ExercisesService } from './exercises.service';
@@ -23,6 +23,21 @@ export class ExercisesController {
     @Put(':id')
     updateExercise(@Param('id') id: number, @Body() updateExerciseDTO: UpdateExerciseDTO){
         this.exercisesService.update(id, updateExerciseDTO);
+    }
+
+    @Get(':id')
+    async findById(@Param('id') id: number){
+        return await this.exercisesService.findById(id);
+    }
+
+    @Get('project/:id')
+    async findExercisesByProject(@Param('id') projectId: number){
+        return await this.exercisesService.findByProject(projectId);
+    }
+
+    @Post('submit')
+    async submitExercise(){
+        return this.exercisesService.submit();
     }
 
 }
