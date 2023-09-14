@@ -16,6 +16,20 @@ export class UsersService {
         private dataSource: DataSource 
     ){}
 
+    async findById(id: string){
+        return await this.userRepository.findOne({
+            where: {
+                id: id
+            }
+        })
+    }
+
+    async findAll(){
+        const user = await this.userRepository.find();
+        console.log(user)
+        return user
+    }
+
     async create(createUserDTO: CreateUserDTO){
         const queryRunner = this.dataSource.createQueryRunner();
 
@@ -23,8 +37,8 @@ export class UsersService {
         await queryRunner.startTransaction();
         try {
             const newUser = this.userRepository.create(createUserDTO);
-            await this.userRepository.save(newUser)
-            await this.usersLevelsService.create(newUser)
+            await this.userRepository.save(newUser);
+            return await this.usersLevelsService.create(newUser);
         }
         catch(err){
             console.log(err)
@@ -41,5 +55,31 @@ export class UsersService {
 
     update(id: number, updateUserDTO: UpdateUserDTO){
         return this.userRepository.update(id, updateUserDTO)
+    }
+
+    async findLevels(id: string){
+        return await this.userRepository.findOne({
+            where: {
+                id: id
+            },
+            relations: {
+                usersLevels: {
+                    level: true
+                }
+            }
+        })
+    }
+
+    async findBadges(id: string){
+        return await this.userRepository.findOne({
+            relations: {
+                usersBadges: {
+                    badge: true
+                }
+            },
+            where: {
+                id: id
+            }
+        })
     }
 }
