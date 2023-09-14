@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinTable, OneToMany, PrimaryColumn } from "typeorm";
+import { UserBadges } from "./user-badges.entity";
 
 @Entity("badges")
 export class Badge {
@@ -11,5 +12,9 @@ export class Badge {
 
     @Column()
     image: string
+
+    @OneToMany(() => UserBadges, usersBadge => usersBadge.badge)
+    @JoinTable()
+    usersBadges: UserBadges[]
 
 }
