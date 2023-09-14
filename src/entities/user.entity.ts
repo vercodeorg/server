@@ -1,10 +1,11 @@
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Badge } from "./badge.entity";
 import { TechProgress } from "./techProgress.entity";
+import { UserBadges } from "./user-badges.entity";
+import { UserEvents } from "./user-events.entity";
 import { UserExercise } from "./user-exercise.entity";
 import { UserLevel } from "./user-level.entity";
+import { UserPoints } from "./user-points.entity";
 import { UserProject } from "./user-project.entity";
-import { UserEvents } from "./user-events.entity";
 
 @Entity('users')
 export class User {
@@ -21,22 +22,23 @@ export class User {
     @Column({default: 0, type: "int"})
     coins: number
 
-    @Column({name: "exp_points", default: 0, type: "int"})
-    expPoints: number
-
     @CreateDateColumn({name: 'created_at'})
     createdAt: string
 
     @UpdateDateColumn({name: 'updated_at'})
     updatedAt: string
 
-    @ManyToMany(() => Badge)
+    @OneToMany(() => UserBadges, usersBadge => usersBadge.user)
     @JoinTable()
-    badges: Badge[]
+    usersBadges: UserBadges[]
 
     @OneToMany(() => UserProject, usersProject => usersProject.user)
     @JoinTable()
     usersProjects: UserProject[]
+
+    @OneToMany(() => UserPoints, userPoints => userPoints.user)
+    @JoinTable()
+    usersPoints: UserPoints[]
 
     @OneToMany(() => UserLevel, usersLevels => usersLevels.user)
     @JoinTable()
