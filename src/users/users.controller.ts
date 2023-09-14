@@ -1,12 +1,22 @@
-import { Body, Controller, Delete, HttpException, HttpStatus, Inject, Param, Post, Put } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { CreateUserDTO } from 'src/dtos/users/createUser.dto';
 import { UpdateUserDTO } from 'src/dtos/users/updateUser.dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
 
     constructor(private usersService: UsersService){}
+
+    @Get(':id')
+    findById(@Param('id') id: string){
+        return this.usersService.findById(id);
+    }
+
+    @Get()
+    findAll(){
+        return this.usersService.findAll();
+    }
 
     @Post()
     async createUser(@Body() createUserDTO: CreateUserDTO){
@@ -22,5 +32,17 @@ export class UsersController {
     updateUser(@Param('id') id: number, @Body() updateUserDTO: UpdateUserDTO){
         this.usersService.update(id, updateUserDTO)
     }
+
+    @Get(':id/badges')
+    async findBadges(@Param('id') id: string){
+        return await this.usersService.findBadges(id);
+    }
+
+    @Get(':id/levels')
+    async findLevels(@Param('id') id: string){
+        return await this.usersService.findLevels(id);
+    }
+
+
 
 }
