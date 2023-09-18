@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TechProgress } from 'src/entities/techProgress.entity';
+import { TechProgress } from 'src/entities/tech-progress.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
