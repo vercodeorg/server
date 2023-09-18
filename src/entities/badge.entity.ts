@@ -10,8 +10,8 @@ export class Badge {
     @Column()
     name: string
 
-    @Column()
-    image: string
+    @Column({name: 'image_url'})
+    imageUrl: string
 
     @OneToMany(() => UserBadges, usersBadge => usersBadge.badge)
     @JoinTable()
