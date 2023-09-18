@@ -6,43 +6,52 @@ import { UsersService } from './users.service';
 @Controller('users')
 export class UsersController {
 
-    constructor(private usersService: UsersService){}
+  constructor(
+    private usersService: UsersService,
+  ) { }
 
-    @Get(':id')
-    findById(@Param('id') id: string){
-        return this.usersService.findById(id);
-    }
+  @Get('id/:id')
+  findById(@Param('id') id: number) {
+    return this.usersService.findById(id);
+  }
 
-    @Get()
-    findAll(){
-        return this.usersService.findAll();
-    }
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
 
-    @Post()
-    async createUser(@Body() createUserDTO: CreateUserDTO){
-        await this.usersService.create(createUserDTO)
-    }
+  @Post()
+  async createUser(@Body() createUserDTO: CreateUserDTO) {
+    await this.usersService.create(createUserDTO)
+  }
 
-    @Delete(':id')
-    deleteUser(@Param('id') id: number){
-        this.usersService.delete(id)
-    }
+  @Delete(':id')
+  deleteUser(@Param('id') id: number) {
+    this.usersService.delete(id)
+  }
 
-    @Put(':id')
-    updateUser(@Param('id') id: number, @Body() updateUserDTO: UpdateUserDTO){
-        this.usersService.update(id, updateUserDTO)
-    }
+  @Put(':id')
+  updateUser(@Param('id') id: number, @Body() updateUserDTO: UpdateUserDTO) {
+    this.usersService.update(id, updateUserDTO)
+  }
 
-    @Get(':id/badges')
-    async findBadges(@Param('id') id: string){
-        return await this.usersService.findBadges(id);
-    }
+  @Get(':username')
+  async findByUsername(@Param('username') username: string) {
+    return await this.usersService.findByUsename(username);
+  }
 
-    @Get(':id/levels')
-    async findLevels(@Param('id') id: string){
-        return await this.usersService.findLevels(id);
-    }
+  @Get(':id/levels')
+  async findLevels(@Param('id') id: number) {
+    return await this.usersService.findLevels(id);
+  }
 
+  @Get(':id/projects')
+  async findProjects(@Param('id') id: number) {
+    return await this.usersService.findProjects(id);
+  }
 
-
+  @Get(':id/exercises')
+  async findExercises(@Param('id') id: number) {
+    return await this.usersService.findExercises(id);
+  }
 }
