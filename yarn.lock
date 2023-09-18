@@ -496,6 +496,20 @@
     "@smithy/types" "^2.3.0"
     tslib "^2.5.0"
 
+"@aws-sdk/s3-request-presigner@^3.412.0":
+  version "3.412.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/s3-request-presigner/-/s3-request-presigner-3.412.0.tgz#f14eeefe1a43cba0d9a89fa188d178e78d7fab4e"
+  integrity sha512-P51VoH2wC6dPfDnDyUUvrNHM8BOQHjLO1rAK88njCvQjsSCKA/E57jk31pOAzMQb3Sauw0qHL8Y+RbFT9YmIJw==
+  dependencies:
+    "@aws-sdk/signature-v4-multi-region" "3.412.0"
+    "@aws-sdk/types" "3.410.0"
+    "@aws-sdk/util-format-url" "3.410.0"
+    "@smithy/middleware-endpoint" "^2.0.6"
+    "@smithy/protocol-http" "^3.0.2"
+    "@smithy/smithy-client" "^2.1.3"
+    "@smithy/types" "^2.3.0"
+    tslib "^2.5.0"
+
 "@aws-sdk/signature-v4-multi-region@3.412.0":
   version "3.412.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/signature-v4-multi-region/-/signature-v4-multi-region-3.412.0.tgz#417cdddd9d345e0a18cb29b282af33dd8ce0c1f2"
@@ -569,6 +583,16 @@
   integrity sha512-iNiqJyC7N3+8zFwnXUqcWSxrZecVZLToo1iTQQdeYL2af1IcOtRgb7n8jpAI/hmXhBSx2+3RI+Y7pxyFo1vu+w==
   dependencies:
     "@aws-sdk/types" "3.410.0"
+    tslib "^2.5.0"
+
+"@aws-sdk/util-format-url@3.410.0":
+  version "3.410.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/util-format-url/-/util-format-url-3.410.0.tgz#80600d2c8c17c21c01879d1d74cc7092e1b60199"
+  integrity sha512-ftxPYq7RBxJMQrOCJARx8+sQccmG+6y7mm9JzfXOHOfS1aWnYQizTitJ7PMA8p90xrUAFQ2CmjT0jaEGWg5VGQ==
+  dependencies:
+    "@aws-sdk/types" "3.410.0"
+    "@smithy/querystring-builder" "^2.0.6"
+    "@smithy/types" "^2.3.0"
     tslib "^2.5.0"
 
 "@aws-sdk/util-locate-window@^3.0.0":
@@ -1639,7 +1663,7 @@
     "@smithy/types" "^2.3.1"
     tslib "^2.5.0"
 
-"@smithy/querystring-builder@^2.0.7":
+"@smithy/querystring-builder@^2.0.6", "@smithy/querystring-builder@^2.0.7":
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/@smithy/querystring-builder/-/querystring-builder-2.0.7.tgz#576d0a9fa5a2ae4305cbc38bb6facbcf4243acdc"
   integrity sha512-RPHnqt4iH1Kwp1Zbf4gJI88hZiynEZjE5hEWJNBmKqCe1Q6v7HBLtaovTaiuYaMEmPyb2KxOi3lISAdT6uuPqw==
@@ -3082,12 +3106,7 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-dotenv@^16.0.3:
-  version "16.3.1"
-  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.3.1.tgz"
-  integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
-
-dotenv@^16.3.1:
+dotenv@^16.0.3, dotenv@^16.3.1:
   version "16.3.1"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.3.1.tgz#369034de7d7e5b120972693352a3bf112172cc3e"
   integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
