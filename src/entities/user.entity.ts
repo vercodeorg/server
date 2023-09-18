@@ -1,57 +1,62 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Badge } from "./badge.entity";
-import { TechProgress } from "./techProgress.entity";
+import { Column, CreateDateColumn, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { UserBadges } from "./user-badges.entity";
+import { UserEvents } from "./user-events.entity";
 import { UserExercise } from "./user-exercise.entity";
 import { UserLevel } from "./user-level.entity";
+import { UserPoints } from "./user-points.entity";
 import { UserProject } from "./user-project.entity";
-import { UserEvents } from "./user-events.entity";
+import { UserTechProgress } from "./user-tech-progress.entity";
 
 @Entity('users')
 export class User {
 
-    @PrimaryGeneratedColumn("uuid")
-    id: string
+  @PrimaryGeneratedColumn("increment")
+  id: number
 
-    @Column({unique: true})
-    username: string
+  @Column({ unique: true })
+  username: string
 
-    @Column()
-    password: string
+  @Column()
+  password: string
 
-    @Column({default: 0, type: "int"})
-    coins: number
+  @Column({ default: 0, type: "int" })
+  coins: number
 
-    @Column({name: "exp_points", default: 0, type: "int"})
-    expPoints: number
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: string
 
-    @CreateDateColumn({name: 'created_at'})
-    createdAt: string
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: string
 
-    @UpdateDateColumn({name: 'updated_at'})
-    updatedAt: string
+  @Column({ name: "xp_points", default: 0 })
+  xpPoints: number
 
-    @ManyToMany(() => Badge)
-    @JoinTable()
-    badges: Badge[]
+  @OneToMany(() => UserBadges, usersBadge => usersBadge.user)
+  @JoinTable()
+  usersBadges: UserBadges[]
 
-    @OneToMany(() => UserProject, usersProject => usersProject.user)
-    @JoinTable()
-    usersProjects: UserProject[]
+  @OneToMany(() => UserProject, usersProject => usersProject.user)
+  @JoinTable()
+  usersProjects: UserProject[]
 
-    @OneToMany(() => UserLevel, usersLevels => usersLevels.user)
-    @JoinTable()
-    usersLevels: UserLevel[]
+  @OneToMany(() => UserTechProgress, usersTechProgress => usersTechProgress.user)
+  @JoinTable()
+  usersTechProgress: UserTechProgress[]
 
-    @OneToMany(() => UserExercise, usersExercises => usersExercises.user)
-    @JoinTable()
-    usersExercises: UserExercise[]
-    
-    @OneToMany(() => UserEvents, usersEvents => usersEvents.user)
-    @JoinTable()
-    usersEvents: UserEvents[]
+  @OneToMany(() => UserPoints, userPoints => userPoints.user)
+  @JoinTable()
+  usersPoints: UserPoints[]
 
-    @ManyToMany(() => TechProgress)
-    @JoinTable()
-    techProgress: TechProgress[]
-    
+  @OneToMany(() => UserLevel, usersLevels => usersLevels.user)
+  @JoinTable()
+  usersLevels: UserLevel[]
+
+  @OneToMany(() => UserExercise, usersExercises => usersExercises.user)
+  @JoinTable()
+  usersExercises: UserExercise[]
+
+  @OneToMany(() => UserEvents, usersEvents => usersEvents.user)
+  @JoinTable()
+  usersEvents: UserEvents[]
+
 }

@@ -11,5 +11,13 @@ export class BadgesService {
         private badgesRepository: Repository<Badge>
     ){}
 
+    async findOne(id: number){
+        return this.badgesRepository.findOne({
+            where: {
+                id: id
+            }
+        })
+    }
+
     
 }
