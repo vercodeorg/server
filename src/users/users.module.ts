@@ -12,6 +12,7 @@ import { UsersLevelsService } from 'src/users-levels/users-levels.service';
 import { UsersProjectsService } from 'src/users-projects/users-projects.service';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { S3Service } from 'src/s3/s3.service';
 
 
 
@@ -19,7 +20,7 @@ import { UsersService } from './users.service';
   imports: [TypeOrmModule.forFeature(
       [User, UserLevel, Level, Project, UserProject, UserExercise, Exercise]
     )],
-  providers: [UsersService, UsersLevelsService, UsersProjectsService, UsersExercisesService],
+  providers: [UsersService, UsersLevelsService, UsersProjectsService, UsersExercisesService, S3Service],
   exports: [UsersService],
   controllers: [UsersController]
 })
