@@ -12,129 +12,129 @@ import { DataSource, Repository } from 'typeorm';
 @Injectable()
 export class UsersService {
 
-    constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>,
-        private usersLevelsService: UsersLevelsService,
-        private s3Service: S3Service,
-        private dataSource: DataSource
-    ) { }
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    private usersLevelsService: UsersLevelsService,
+    private s3Service: S3Service,
+    private dataSource: DataSource
+  ) { }
 
-    async findById(id: number) {
-        return await this.userRepository.findOne({
-            where: {
-                id: id
-            }
-        })
+  async findById(id: number) {
+    return await this.userRepository.findOne({
+      where: {
+        id: id
+      }
+    })
+  }
+
+  async findAll() {
+    const user = await this.userRepository.find();
+    console.log(user)
+    return user
+  }
+
+  async create(createUserDTO: CreateUserDTO) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const newUser = this.userRepository.create(createUserDTO);
+      await this.userRepository.save(newUser);
+      return await this.usersLevelsService.create(newUser);
     }
-
-    async findAll() {
-        const user = await this.userRepository.find();
-        console.log(user)
-        return user
+    catch (err) {
+      console.log(err)
+      await queryRunner.rollbackTransaction();
     }
+    finally {
+      await queryRunner.release();
+    }
+  }
 
-    async create(createUserDTO: CreateUserDTO) {
-        const queryRunner = this.dataSource.createQueryRunner();
+  delete(id: number) {
+    return this.userRepository.delete(id)
+  }
 
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
-        try {
-            const newUser = this.userRepository.create(createUserDTO);
-            await this.userRepository.save(newUser);
-            return await this.usersLevelsService.create(newUser);
+  update(id: number, updateUserDTO: UpdateUserDTO) {
+    return this.userRepository.update(id, updateUserDTO)
+  }
+
+  async findByUsename(username: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        username: username
+      },
+      relations: {
+        usersBadges: {
+          badge: true
+        },
+        usersPoints: {
+          rankProgress: true
+        },
+        usersTechProgress: {
+          techProgress: true
         }
-        catch (err) {
-            console.log(err)
-            await queryRunner.rollbackTransaction();
+      }
+    })
+    for (const userBadge of user.usersBadges) {
+      const key = userBadge.badge.imageUrl
+      const params = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: `svgs/${key}`
+      }
+
+      try {
+        const command = new GetObjectCommand(params)
+        const url = await getSignedUrl(this.s3Service.getS3Client(), command, { expiresIn: 600 })
+        userBadge.badge.imageUrl = url
+      } catch (error) {
+        console.error(`Error to get signedUrl ${key} from aws: ${error.message}`)
+      }
+    }
+    return user
+  }
+
+  async findLevels(id: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: id
+      },
+      relations: {
+        usersLevels: {
+          level: true
         }
-        finally {
-            await queryRunner.release();
+      }
+    })
+    return user.usersLevels;
+  }
+
+  async findProjects(id: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: id
+      },
+      relations: {
+        usersProjects: {
+          project: true,
         }
-    }
+      }
+    })
+    return user.usersProjects;
+  }
 
-    delete(id: number) {
-        return this.userRepository.delete(id)
-    }
-
-    update(id: number, updateUserDTO: UpdateUserDTO) {
-        return this.userRepository.update(id, updateUserDTO)
-    }
-
-    async findByUsename(username: string) {
-        const user = await this.userRepository.findOne({
-            where: {
-                username: username
-            },
-            relations: {
-                usersBadges: {
-                    badge: true
-                },
-                usersPoints: {
-                    rankProgress: true
-                },
-                usersTechProgress: {
-                    techProgress: true
-                }
-            }
-        })
-        for (const userBadge of user.usersBadges) {
-            const key = userBadge.badge.imageUrl
-            const params = {
-                Bucket: process.env.BUCKET_NAME,
-                Key: `svgs/${key}.svg`
-            }
-            
-            try{
-                const command = new GetObjectCommand(params)
-                const url = await getSignedUrl(this.s3Service.getS3Client(), command, { expiresIn: 60 })
-                userBadge.badge.imageUrl = url
-            }catch(error){
-                console.error(`Error to get signedUrl ${key} from aws: ${error.message}`)
-            }
+  async findExercises(id: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: id
+      },
+      relations: {
+        usersExercises: {
+          exercise: true,
         }
-        return user
-    }
-
-    async findLevels(id: number) {
-        const user = await this.userRepository.findOne({
-            where: {
-                id: id
-            },
-            relations: {
-                usersLevels: {
-                    level: true
-                }
-            }
-        })
-        return user.usersLevels;
-    }
-
-    async findProjects(id: number) {
-        const user = await this.userRepository.findOne({
-            where: {
-                id: id
-            },
-            relations: {
-                usersProjects: {
-                    project: true,
-                }
-            }
-        })
-        return user.usersProjects;
-    }
-
-    async findExercises(id: number) {
-        const user = await this.userRepository.findOne({
-            where: {
-                id: id
-            },
-            relations: {
-                usersExercises: {
-                    exercise: true,
-                }
-            }
-        })
-        return user.usersExercises;
-    }
+      }
+    })
+    return user.usersExercises;
+  }
 }

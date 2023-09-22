@@ -12,14 +12,12 @@ export class UsersBadgeService {
         @InjectRepository(UserBadges)
         private usersBadgeRepository: Repository<UserBadges>,
         private badgesService: BadgesService
-    ){}
+    ) { }
 
-    async connectBadgeToUser(user: User){
+    async connectBadgeToUser(user: User) {
         const newUserBadge = this.usersBadgeRepository.create();
         newUserBadge.user = user;
         newUserBadge.badge = await this.badgesService.findOne(1);
         return await this.usersBadgeRepository.save(newUserBadge);
     }
-
-
 }

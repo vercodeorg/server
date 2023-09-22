@@ -9,29 +9,28 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class UsersLevelsService {
 
-    constructor(
-        @InjectRepository(UserLevel)
-        private usersLevelsRepository: Repository<UserLevel>,
-        @InjectRepository(Level)
-        private levelsRepository: Repository<Level>,
-        private usersProjectsService: UsersProjectsService
-    ) { }
+  constructor(
+    @InjectRepository(UserLevel)
+    private usersLevelsRepository: Repository<UserLevel>,
+    @InjectRepository(Level)
+    private levelsRepository: Repository<Level>,
+    private usersProjectsService: UsersProjectsService
+  ) { }
 
-    async create(user: User) {
-        try {
-            const newUserLevel =  this.usersLevelsRepository.create()
-            newUserLevel.user = user
-            newUserLevel.level = await this.levelsRepository.findOne({
-                where: {
-                    id: 1
-                }
-            })
-            await this.usersLevelsRepository.save(newUserLevel);
-            await this.usersProjectsService.create(user);
-        }
-        catch (err) {
-            console.log(err)
-            throw new Error(err)
-        }
+  async create(user: User) {
+    try {
+      const levels = await this.levelsRepository.find();
+      levels.map(async (lv) => {
+        const newUserLevel = this.usersLevelsRepository.create()
+        newUserLevel.user = user
+        newUserLevel.level = lv
+        await this.usersLevelsRepository.save(newUserLevel)
+      })
+      await this.usersProjectsService.create(user);
     }
+    catch (err) {
+      console.log(err)
+      throw new Error(err)
+    }
+  }
 }
