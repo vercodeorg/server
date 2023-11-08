@@ -17,6 +17,8 @@ import { UsersPointsModule } from './users-points/users-points.module';
 import { UsersProjectsModule } from './users-projects/users-projects.module';
 import { UsersTechProgressModule } from './users-tech-progress/users-tech-progress.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { ExercisesSubmissionsModule } from './exercises-submissions/exercises-submissions.module';
 
 @Module({
   imports: [
@@ -45,6 +47,8 @@ import { UsersModule } from './users/users.module';
     UsersPointsModule,
     UsersBadgeModule,
     UsersTechProgressModule,
+    AuthModule,
+    ExercisesSubmissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
