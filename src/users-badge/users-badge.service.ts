@@ -11,13 +11,18 @@ export class UsersBadgeService {
     constructor(
         @InjectRepository(UserBadges)
         private usersBadgeRepository: Repository<UserBadges>,
-        private badgesService: BadgesService
+        private badgesService: BadgesService,
     ) { }
 
-    async connectBadgeToUser(user: User) {
-        const newUserBadge = this.usersBadgeRepository.create();
-        newUserBadge.user = user;
-        newUserBadge.badge = await this.badgesService.findOne(1);
-        return await this.usersBadgeRepository.save(newUserBadge);
+    async addToNewUserInitialBadges(user: User) {
+        try {
+            const newUserBadge = this.usersBadgeRepository.create();
+            newUserBadge.user = user;
+            newUserBadge.badge = await this.badgesService.findOne(1);
+            await this.usersBadgeRepository.save(newUserBadge);
+        } catch (err) {
+            console.error(err)
+            throw new Error(err)
+        }
     }
 }

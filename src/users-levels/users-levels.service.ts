@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Level } from 'src/entities/level.entity';
 import { UserLevel } from 'src/entities/user-level.entity';
 import { User } from 'src/entities/user.entity';
-import { UsersProjectsService } from 'src/users-projects/users-projects.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -14,10 +13,9 @@ export class UsersLevelsService {
     private usersLevelsRepository: Repository<UserLevel>,
     @InjectRepository(Level)
     private levelsRepository: Repository<Level>,
-    private usersProjectsService: UsersProjectsService
   ) { }
 
-  async create(user: User) {
+  async addToNewUserInitialLevels(user: User) {
     try {
       const levels = await this.levelsRepository.find();
       levels.map(async (lv) => {
@@ -26,7 +24,6 @@ export class UsersLevelsService {
         newUserLevel.level = lv
         await this.usersLevelsRepository.save(newUserLevel)
       })
-      await this.usersProjectsService.create(user);
     }
     catch (err) {
       console.log(err)

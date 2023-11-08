@@ -6,7 +6,13 @@ import { CreateUserDTO } from 'src/dtos/users/createUser.dto';
 import { UpdateUserDTO } from 'src/dtos/users/updateUser.dto';
 import { User } from 'src/entities/user.entity';
 import { S3Service } from 'src/s3/s3.service';
+import { UsersBadgeService } from 'src/users-badge/users-badge.service';
+import { UsersExercisesService } from 'src/users-exercises/users-exercises.service';
 import { UsersLevelsService } from 'src/users-levels/users-levels.service';
+import { UsersPointsService } from 'src/users-points/users-points.service';
+import { UsersProjectsService } from 'src/users-projects/users-projects.service';
+import { UsersTechProgressService } from 'src/users-tech-progress/users-tech-progress.service';
+import { encodePassword } from 'src/utils/bcrypt';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
@@ -16,6 +22,11 @@ export class UsersService {
         @InjectRepository(User)
         private userRepository: Repository<User>,
         private usersLevelsService: UsersLevelsService,
+        private usersProjectsService: UsersProjectsService,
+        private usersExercisesService: UsersExercisesService,
+        private usersBadgesService: UsersBadgeService,
+        private usersTechProgressService: UsersTechProgressService,
+        private usersPointsService: UsersPointsService,
         private s3Service: S3Service,
         private dataSource: DataSource
     ) { }
@@ -36,10 +47,14 @@ export class UsersService {
                     techProgress: true
                 },
                 usersExercises: {
-                    exercise: true
+                    exercise: {
+                        project: true
+                    }
                 },
                 usersProjects: {
-                    project: true
+                    project: {
+                        level: true
+                    } 
                 },
                 usersLevels: {
                     level: true
@@ -66,9 +81,15 @@ export class UsersService {
     }
 
     async findAll() {
-        const user = await this.userRepository.find();
-        console.log(user)
-        return user
+        return await this.userRepository.find();
+    }
+
+    async findByEmail(email: string) {
+        return await this.userRepository.findOne({
+            where:{
+                email: email 
+            }
+        });
     }
 
     async create(createUserDTO: CreateUserDTO) {
@@ -77,9 +98,16 @@ export class UsersService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const newUser = this.userRepository.create(createUserDTO);
+            const password = await encodePassword(createUserDTO.password);
+            const newUser = this.userRepository.create({...createUserDTO, password});
             await this.userRepository.save(newUser);
-            return await this.usersLevelsService.create(newUser);
+            await this.usersLevelsService.addToNewUserInitialLevels(newUser);
+            await this.usersProjectsService.addToNewUserInitialProjects(newUser);
+            await this.usersExercisesService.addToNewUserInitalExercises(newUser);
+            await this.usersBadgesService.addToNewUserInitialBadges(newUser);
+            await this.usersTechProgressService.addToNewUserInitialTechProgress(newUser);
+            await this.usersPointsService.addToNewUserInitialPoints(newUser);
+            return
         }
         catch (err) {
             console.log(err)
@@ -96,5 +124,23 @@ export class UsersService {
 
     update(id: number, updateUserDTO: UpdateUserDTO) {
         return this.userRepository.update(id, updateUserDTO)
+    }
+
+    findExerciseById(id: number, exerciseId: number) {
+        return this.userRepository.find({
+            where: {
+                id: id,
+                usersExercises: {
+                    exercise: {
+                        id: exerciseId
+                    }
+                }
+            },
+            relations: {
+                usersExercises: {
+                   exercise: true 
+                }
+            }
+        })
     }
 }
