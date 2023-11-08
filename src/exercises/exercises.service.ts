@@ -10,7 +10,7 @@ export class ExercisesService {
 
     constructor(
         @InjectRepository(Exercise)
-        private exercisesRepository: Repository<Exercise>
+        private exercisesRepository: Repository<Exercise>,
     ) { }
 
     async create(createExerciseDTO: CreateExerciseDTO) {
@@ -26,7 +26,7 @@ export class ExercisesService {
         return await this.exercisesRepository.update(id, updateExerciseDTO);
     }
 
-    async findById(id: number): Promise<Exercise>{
+    async findById(id: number): Promise<Exercise> {
         return await this.exercisesRepository.findOne({
             where: {
                 id: id
@@ -34,7 +34,7 @@ export class ExercisesService {
         })
     }
 
-    async findByProject(projectId: number): Promise<Exercise[]>{
+    async findByProject(projectId: number): Promise<Exercise[]> {
         return await this.exercisesRepository.find({
             relations: {
                 project: true
@@ -45,12 +45,5 @@ export class ExercisesService {
                 }
             }
         })
-    }
-
-    submit(){
-        return {
-            success: true,
-            message: "Congratulations",            
-        }
     }
 }

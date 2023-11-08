@@ -34,10 +34,4 @@ export class ExercisesController {
     async findExercisesByProject(@Param('id') projectId: number){
         return await this.exercisesService.findByProject(projectId);
     }
-
-    @Post('submit')
-    async submitExercise(){
-        return this.exercisesService.submit();
-    }
-
 }

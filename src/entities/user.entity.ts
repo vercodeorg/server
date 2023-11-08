@@ -19,6 +19,9 @@ export class User {
   @Column()
   password: string
 
+  @Column({ unique: true})
+  email: string
+
   @Column({ default: 0, type: "int" })
   coins: number
 

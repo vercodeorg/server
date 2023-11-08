@@ -8,7 +8,7 @@ export class UserTechProgress {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({type: "int", name: "xp_points"})
+  @Column({type: "int", name: "xp_points", default: 0})
   xpPoints: number
 
   @ManyToOne(() => User, user => user.usersTechProgress)
