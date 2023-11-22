@@ -1,7 +1,8 @@
 import { ExerciseStatus } from "src/types/exerciseStatus";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Exercise } from "./exercise.entity";
 import { User } from "./user.entity";
+import { ExerciseSubmission } from "./exercise-submission.entity";
 
 @Entity("users_exercises")
 export class UserExercise {
@@ -17,12 +18,12 @@ export class UserExercise {
     })
     exerciseStatus: ExerciseStatus
 
-    @UpdateDateColumn({ name: "date_last_try" })
-    dateLastTry: string
-
     @ManyToOne(() => User, user => user.usersExercises)
     user: User
 
     @ManyToOne(() => Exercise, exercise => exercise.usersExercise)
     exercise: Exercise
+
+    @OneToMany(() => ExerciseSubmission, exerciseSubmission => exerciseSubmission.userExercise)
+    exerciseSubmission: ExerciseSubmission[]
 }

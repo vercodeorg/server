@@ -10,29 +10,35 @@ export class Exercise {
 
     @Column()
     name: string
-    
-    @Column({type: "int", name: "coins_to_win"})
-    coinsToWin: number
-    
-    @Column({type: "int", name: "xp_to_win"})
-    xpToWin: number
-    
-    @Column("simple-array")
-    technologies: string[]
 
-    @Column({name: "turn_in_directory"})
+    @Column({ type: "int", name: "coins_to_win" })
+    coinsToWin: number
+
+    @Column({ type: "int", name: "xp_to_win" })
+    xpToWin: number
+
+    @Column()
+    technology: string
+
+    @Column({ type: "int", name: "tech_points_to_win" })
+    techPointsToWin: number
+
+    @Column({ name: "turn_in_directory" })
     turnInDirectory: string
 
-    @Column("simple-array", {name: "files_to_turn_in"})
+    @Column({ name: "stdin_test", nullable: true })
+    stdinTest: string
+
+    @Column("simple-array", { name: "files_to_turn_in" })
     filesToTurnIn: string[]
 
-    @Column("simple-array", {name: "allowed_functions"})
+    @Column("simple-array", { name: "allowed_functions" })
     allowedFunctions: string[]
 
-    @Column({name: "image_instructions"})
+    @Column({ name: "image_instructions" })
     imageInstructions: string
-    
-    @Column({name: "code_result", nullable: true})
+
+    @Column({ name: "code_result", nullable: true })
     codeResult: string
 
     @ManyToOne(() => Project, project => project.exercises)
