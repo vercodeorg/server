@@ -58,7 +58,7 @@ export class UsersService {
                 },
                 usersLevels: {
                     level: true
-                }
+                },
             }
         })
         for (const userBadge of user.usersBadges) {

@@ -19,6 +19,8 @@ export class UsersExercisesService {
         private exercisesSubmissionsRepository: Repository<ExerciseSubmission>,
         @InjectRepository(Exercise)
         private exercisesRepository: Repository<Exercise>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
         private readonly httpService: HttpService,
     ) { }
 
@@ -85,13 +87,19 @@ export class UsersExercisesService {
 
     async correctExercise(token: string, userExercise: UserExercise) {
         const judgeApiUrl = process.env.JUDGE_API_SERVICE
+        await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await lastValueFrom(this.httpService.get(`${judgeApiUrl}/submissions/${token}?base64_encoded=false&wait=false`))
         console.log(response.status)
         if (response.status === HttpStatus.OK) {
             if (response.data.status.description === "Accepted") {
-                userExercise.user.coins += userExercise.exercise.coinsToWin
-                userExercise.user.xpPoints += userExercise.exercise.xpToWin
-                await this.usersExercisesRepository.save(userExercise)
+                await this.userRepository.createQueryBuilder().update()
+                    .set({
+                        coins: userExercise.user.coins + userExercise.exercise.coinsToWin,
+                        xpPoints: userExercise.user.xpPoints + userExercise.exercise.xpToWin
+                    })
+                    .where("id = :id", { id: userExercise.user.id })
+                    .execute()
+
                 return {
                     success: true
                 }
