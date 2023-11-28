@@ -24,11 +24,7 @@ import { ExercisesSubmissionsModule } from './exercises-submissions/exercises-su
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: "pedrohsj.dev",
-      password: "4734amw704",
-      database: "vercode_db",
+      url: process.env.DB_URL,
       autoLoadEntities: true,
       synchronize: true,
     }),
