@@ -23,23 +23,17 @@ export class Exercise {
     @Column({ type: "int", name: "tech_points_to_win" })
     techPointsToWin: number
 
-    @Column({ name: "turn_in_directory" })
-    turnInDirectory: string
+    @Column({ nullable: true })
+    stdin: string
 
-    @Column({ name: "stdin_test", nullable: true })
-    stdinTest: string
-
-    @Column("simple-array", { name: "files_to_turn_in" })
-    filesToTurnIn: string[]
+    @Column({ name: "expected_output", nullable: true })
+    expectedOutput: string
 
     @Column("simple-array", { name: "allowed_functions" })
     allowedFunctions: string[]
 
     @Column({ name: "image_instructions" })
     imageInstructions: string
-
-    @Column({ name: "code_result", nullable: true })
-    codeResult: string
 
     @ManyToOne(() => Project, project => project.exercises)
     project: Project

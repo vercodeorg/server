@@ -54,11 +54,11 @@ export class UsersService {
                 usersProjects: {
                     project: {
                         level: true
-                    } 
+                    }
                 },
                 usersLevels: {
                     level: true
-                }
+                },
             }
         })
         for (const userBadge of user.usersBadges) {
@@ -76,8 +76,22 @@ export class UsersService {
                 console.error(`Error to get signedUrl ${key} from aws: ${error.message}`)
             }
         }
-        return user
+        for (const userExercise of user.usersExercises) {
+            const key = userExercise.exercise.imageInstructions
+            const params = {
+                Bucket: process.env.BUCKET_NAME,
+                Key: `images/${key}.png`
+            }
 
+            try {
+                const command = new GetObjectCommand(params)
+                const url = await getSignedUrl(this.s3Service.getS3Client(), command, { expiresIn: 600 })
+                userExercise.exercise.imageInstructions = url
+            } catch (error) {
+                console.error(`Error to get signedUrl ${key} from aws: ${error.message}`)
+            }
+        }
+        return user
     }
 
     async findAll() {
@@ -86,8 +100,8 @@ export class UsersService {
 
     async findByEmail(email: string) {
         return await this.userRepository.findOne({
-            where:{
-                email: email 
+            where: {
+                email: email
             }
         });
     }
@@ -99,7 +113,7 @@ export class UsersService {
         await queryRunner.startTransaction();
         try {
             const password = await encodePassword(createUserDTO.password);
-            const newUser = this.userRepository.create({...createUserDTO, password});
+            const newUser = this.userRepository.create({ ...createUserDTO, password });
             await this.userRepository.save(newUser);
             await this.usersLevelsService.addToNewUserInitialLevels(newUser);
             await this.usersProjectsService.addToNewUserInitialProjects(newUser);
@@ -138,7 +152,7 @@ export class UsersService {
             },
             relations: {
                 usersExercises: {
-                   exercise: true 
+                    exercise: true
                 }
             }
         })

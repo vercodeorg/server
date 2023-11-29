@@ -19,6 +19,8 @@ export class UsersExercisesService {
         private exercisesSubmissionsRepository: Repository<ExerciseSubmission>,
         @InjectRepository(Exercise)
         private exercisesRepository: Repository<Exercise>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
         private readonly httpService: HttpService,
     ) { }
 
@@ -42,24 +44,25 @@ export class UsersExercisesService {
             {
                 where: { id: id },
                 relations: {
-                    exercise: true
+                    exercise: true,
+                    user: true
                 }
             }
         )
 
-        const token = await this.compileCodeOnJudgeService(codeResult.code, userExercise.exercise.stdinTest)
+        const token = await this.compileCodeOnJudgeService(codeResult.code, userExercise.exercise.stdin, userExercise.exercise.expectedOutput)
         const newExerciseSubmission = this.exercisesSubmissionsRepository.create()
         newExerciseSubmission.userExercise = userExercise
         newExerciseSubmission.codeResult = codeResult.code
         newExerciseSubmission.token = token
         await this.exercisesSubmissionsRepository.save(newExerciseSubmission)
 
-        const result = await this.correctExercise(token, userExercise.exercise.stdinTest)
-        if(result.success){
+        const result = await this.correctExercise(token, userExercise)
+        if (result.success) {
             await this.usersExercisesRepository.update(id, {
                 exerciseStatus: ExerciseStatus.SUCCESSFUL
             })
-        }else {
+        } else {
             await this.usersExercisesRepository.update(id, {
                 exerciseStatus: ExerciseStatus.FAILED
             })
@@ -68,29 +71,35 @@ export class UsersExercisesService {
     }
 
 
-    async compileCodeOnJudgeService(codeResult: string, stdin: string) {
+    async compileCodeOnJudgeService(codeResult: string, stdin: string, expectedOutput: string) {
         const judgeApiUrl = process.env.JUDGE_API_SERVICE
         const response = await firstValueFrom(this.httpService.post(judgeApiUrl + '/submissions/?base64_encoded=false&wait=false',
             {
                 source_code: codeResult,
                 language_id: 50,
                 stdin: stdin,
-                expected_output: 'c'
+                expected_output: expectedOutput
             }))
-        console.log(response.data)
         if (response.status === HttpStatus.CREATED) {
             return response.data?.token;
         }
-        if (response.status === HttpStatus.UNPROCESSABLE_ENTITY) {
-            console.log(response.data)
-        }
     }
 
-    async correctExercise(token: string, stdin: string) {
+    async correctExercise(token: string, userExercise: UserExercise) {
         const judgeApiUrl = process.env.JUDGE_API_SERVICE
+        await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await lastValueFrom(this.httpService.get(`${judgeApiUrl}/submissions/${token}?base64_encoded=false&wait=false`))
+        console.log(response.status)
         if (response.status === HttpStatus.OK) {
-            if (response.data.stdout === stdin) {
+            if (response.data.status.description === "Accepted") {
+                await this.userRepository.createQueryBuilder().update()
+                    .set({
+                        coins: userExercise.user.coins + userExercise.exercise.coinsToWin,
+                        xpPoints: userExercise.user.xpPoints + userExercise.exercise.xpToWin
+                    })
+                    .where("id = :id", { id: userExercise.user.id })
+                    .execute()
+
                 return {
                     success: true
                 }
