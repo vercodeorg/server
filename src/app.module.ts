@@ -23,7 +23,6 @@ import { ExercisesSubmissionsModule } from './exercises-submissions/exercises-su
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'postgres',
       url: process.env.DB_URL,
       autoLoadEntities: true,
       synchronize: true,
