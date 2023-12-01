@@ -90,6 +90,7 @@ export class UsersExercisesService {
         await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await lastValueFrom(this.httpService.get(`${judgeApiUrl}/submissions/${token}?base64_encoded=false&wait=false`))
         console.log(response.status)
+        console.log(response.data)
         if (response.status === HttpStatus.OK) {
             if (response.data.status.description === "Accepted") {
                 await this.userRepository.createQueryBuilder().update()
