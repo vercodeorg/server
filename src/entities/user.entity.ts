@@ -22,7 +22,7 @@ export class User {
   @Column({ unique: true})
   email: string
 
-  @Column({ default: 0, type: "int" })
+  @Column({ default: 50, type: "int" })
   coins: number
 
   @CreateDateColumn({ name: 'created_at' })
