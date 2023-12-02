@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { UserBadges } from "./user-badges.entity";
 import { UserEvents } from "./user-events.entity";
 import { UserExercise } from "./user-exercise.entity";
@@ -34,6 +34,9 @@ export class User {
   @Column({ name: "xp_points", default: 0 })
   xpPoints: number
 
+  @Column({ default: 1 })
+  level: number
+
   @OneToMany(() => UserBadges, usersBadge => usersBadge.user)
   @JoinTable()
   usersBadges: UserBadges[]
@@ -45,10 +48,6 @@ export class User {
   @OneToMany(() => UserTechProgress, usersTechProgress => usersTechProgress.user)
   @JoinTable()
   usersTechProgress: UserTechProgress[]
-
-  @OneToMany(() => UserPoints, userPoints => userPoints.user)
-  @JoinTable()
-  usersPoints: UserPoints[]
 
   @OneToMany(() => UserLevel, usersLevels => usersLevels.user)
   @JoinTable()

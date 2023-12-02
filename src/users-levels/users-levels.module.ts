@@ -8,6 +8,7 @@ import { UsersLevelsService } from './users-levels.service';
   imports: [TypeOrmModule.forFeature(
     [UserLevel, Level]
   )],
-  providers: [UsersLevelsService]
+  providers: [UsersLevelsService],
+  exports: [UsersLevelsService]
 })
 export class UsersLevelsModule { }

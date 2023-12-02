@@ -20,19 +20,18 @@ import { UsersTechProgressService } from 'src/users-tech-progress/users-tech-pro
 import { Badge } from 'src/entities/badge.entity';
 import { UserTechProgress } from 'src/entities/user-tech-progress.entity';
 import { TechProgress } from 'src/entities/tech-progress.entity';
-import { UsersPointsService } from 'src/users-points/users-points.service';
 import { UserPoints } from 'src/entities/user-points.entity';
 import { RankProgress } from 'src/entities/rank-progress.entity';
 import { ExerciseSubmission } from 'src/entities/exercise-submission.entity';
 import { HttpModule } from '@nestjs/axios';
-
+import { UsersExercisesModule } from 'src/users-exercises/users-exercises.module';
 
 
 @Module({
-  imports: [HttpModule, TypeOrmModule.forFeature(
+  imports: [HttpModule, UsersExercisesModule, TypeOrmModule.forFeature(
       [User, UserLevel, Level, Project, UserProject, UserExercise, Exercise, UserBadges, Badge, UserTechProgress, TechProgress, UserPoints, RankProgress, ExerciseSubmission]
     )],
-  providers: [UsersService, UsersLevelsService, UsersProjectsService, UsersExercisesService, UsersBadgeService, BadgesService, UsersTechProgressService, UsersPointsService, S3Service],
+  providers: [UsersService, UsersLevelsService, UsersProjectsService, UsersBadgeService, BadgesService, UsersTechProgressService, S3Service],
   exports: [UsersService],
   controllers: [UsersController]
 })

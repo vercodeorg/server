@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { ExerciseSubmission } from 'src/entities/exercise-submission.entity';
@@ -7,6 +7,7 @@ import { Exercise } from 'src/entities/exercise.entity';
 import { UserExercise } from 'src/entities/user-exercise.entity';
 import { User } from 'src/entities/user.entity';
 import { ExerciseStatus } from 'src/types/exerciseStatus';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -19,8 +20,7 @@ export class UsersExercisesService {
         private exercisesSubmissionsRepository: Repository<ExerciseSubmission>,
         @InjectRepository(Exercise)
         private exercisesRepository: Repository<Exercise>,
-        @InjectRepository(User)
-        private userRepository: Repository<User>,
+        private usersService: UsersService,
         private readonly httpService: HttpService,
     ) { }
 
@@ -89,18 +89,9 @@ export class UsersExercisesService {
         const judgeApiUrl = process.env.JUDGE_API_SERVICE
         await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await lastValueFrom(this.httpService.get(`${judgeApiUrl}/submissions/${token}?base64_encoded=false&wait=false`))
-        console.log(response.status)
-        console.log(response.data)
         if (response.status === HttpStatus.OK) {
             if (response.data.status.description === "Accepted") {
-                await this.userRepository.createQueryBuilder().update()
-                    .set({
-                        coins: userExercise.user.coins + userExercise.exercise.coinsToWin,
-                        xpPoints: userExercise.user.xpPoints + userExercise.exercise.xpToWin
-                    })
-                    .where("id = :id", { id: userExercise.user.id })
-                    .execute()
-
+                await this.usersService.updateXpPoints(userExercise);
                 return {
                     success: true
                 }

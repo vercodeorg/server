@@ -7,10 +7,13 @@ import { UsersExercisesController } from './users-exercises.controller';
 import { ExerciseSubmission } from 'src/entities/exercise-submission.entity';
 import { HttpModule } from '@nestjs/axios';
 import { User } from 'src/entities/user.entity';
+import { RankProgress } from 'src/entities/rank-progress.entity';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [HttpModule, TypeOrmModule.forFeature([UserExercise, Exercise, ExerciseSubmission, User])],
+  imports: [HttpModule, UsersModule, TypeOrmModule.forFeature([UserExercise, Exercise, ExerciseSubmission, User, RankProgress])],
   providers: [UsersExercisesService],
-  controllers: [UsersExercisesController]
+  controllers: [UsersExercisesController],
+  exports: [UsersExercisesService]
 })
 export class UsersExercisesModule {}

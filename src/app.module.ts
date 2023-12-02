@@ -40,7 +40,7 @@ import { ExercisesSubmissionsModule } from './exercises-submissions/exercises-su
     UsersEventsModule,
     EventsModule,
     RankProgressModule,
-    UsersPointsModule,
+    //UsersPointsModule,
     UsersBadgeModule,
     UsersTechProgressModule,
     AuthModule,
