@@ -20,6 +20,7 @@ export class UsersExercisesService {
         private exercisesSubmissionsRepository: Repository<ExerciseSubmission>,
         @InjectRepository(Exercise)
         private exercisesRepository: Repository<Exercise>,
+        @Inject(forwardRef(() => UsersService))
         private usersService: UsersService,
         private readonly httpService: HttpService,
     ) { }
@@ -89,6 +90,7 @@ export class UsersExercisesService {
         const judgeApiUrl = process.env.JUDGE_API_SERVICE
         await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await lastValueFrom(this.httpService.get(`${judgeApiUrl}/submissions/${token}?base64_encoded=false&wait=false`))
+        console.log("exercicio corrigido", response.data)
         if (response.status === HttpStatus.OK) {
             if (response.data.status.description === "Accepted") {
                 await this.usersService.updateXpPoints(userExercise);

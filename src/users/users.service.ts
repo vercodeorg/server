@@ -92,6 +92,7 @@ export class UsersService {
             }
         }
         return user
+
     }
 
     async findAll() {
@@ -107,6 +108,20 @@ export class UsersService {
     }
 
     async create(createUserDTO: CreateUserDTO) {
+    
+        // return await this.dataSource.transaction(async (manage) => {
+        //     const password = await encodePassword(createUserDTO.password);
+        //     const newUser = this.userRepository.create({ ...createUserDTO, password });
+        //     await this.userRepository.save(newUser);
+        //     await this.usersLevelsService.addToNewUserInitialLevels(newUser);
+        //     await this.usersProjectsService.addToNewUserInitialProjects(newUser);
+        //     await this.usersExercisesService.addToNewUserInitalExercises(newUser);
+        //     await this.usersBadgesService.addToNewUserInitialBadges(newUser);
+        //     await this.usersTechProgressService.addToNewUserInitialTechProgress(newUser);
+        //     return 
+        // }).catch(err =>{})
+        // .finally(() => {});
+    
         const queryRunner = this.dataSource.createQueryRunner();
 
         await queryRunner.connect();
@@ -168,6 +183,11 @@ export class UsersService {
                 level: user.level
             }
         })
+        const rankProgressToUpdate = await this.rankProgressRepository.findOne({
+            where: {
+                level: user.level+1
+            }
+        })
         await this.userRepository.createQueryBuilder().update()
             .set({
                 coins: userExercise.user.coins + userExercise.exercise.coinsToWin,
@@ -178,7 +198,8 @@ export class UsersService {
         if (user.xpPoints + userExercise.exercise.xpToWin > rankProgress.requiredXpToUpdate) {
             await this.userRepository.createQueryBuilder().update()
                 .set({
-                    level: user.level + 1
+                    level: user.level + 1,
+                    xpToUpgrade: rankProgressToUpdate.requiredXpToUpdate
                 })
                 .where("id = :id", { id: userExercise.user.id })
                 .execute()

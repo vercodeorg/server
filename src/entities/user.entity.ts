@@ -37,6 +37,9 @@ export class User {
   @Column({ default: 1 })
   level: number
 
+  @Column({ default: 100})
+  xpToUpgrade: number
+
   @OneToMany(() => UserBadges, usersBadge => usersBadge.user)
   @JoinTable()
   usersBadges: UserBadges[]
