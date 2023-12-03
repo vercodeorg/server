@@ -15,15 +15,4 @@ export class UsersPointsService {
         private rankProgressRepository: Repository<RankProgress>
     ) { }
 
-    async addToNewUserInitialPoints(user: User) {
-        try {
-            const newUserPoints = this.usersPointsRepository.create();
-            newUserPoints.user = user;
-            newUserPoints.rankProgress = await this.rankProgressRepository.findOne({ where: { id: 1 } });
-            await this.usersPointsRepository.save(newUserPoints);
-        } catch (err) {
-            console.error(err)
-            throw new Error(err)
-        }
-    }
 }

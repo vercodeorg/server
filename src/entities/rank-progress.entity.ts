@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserPoints } from "./user-points.entity";
 
 
@@ -13,9 +13,4 @@ export class RankProgress{
 
     @Column({name: 'required_xp_to_update', type: 'int'})
     requiredXpToUpdate: number
-
-    @OneToMany(() => UserPoints, usersPoints => usersPoints.rankProgress)
-    @JoinTable()
-    usersPoints: UserPoints[]
-
 }
