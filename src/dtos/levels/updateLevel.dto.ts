@@ -1,7 +1,7 @@
-import { Status } from "src/types/status"
+import { Status } from "src/types/status";
 
 export class UpdateLevelDTO {
-    name: string
-    status: Status
-    unlockCost: number
+  name: string;
+  status: Status;
+  unlockCost: number;
 }
