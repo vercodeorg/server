@@ -19,35 +19,42 @@ import { UsersTechProgressModule } from "./users-tech-progress/users-tech-progre
 import { UsersModule } from "./users/users.module";
 import { AuthModule } from "./auth/auth.module";
 import { ExercisesSubmissionsModule } from "./exercises-submissions/exercises-submissions.module";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      url: process.env.DB_URL,
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
-    UsersModule,
-    AuthModule,
-
-    BadgesModule,
-    LevelsModule,
-    ProjectsModule,
-    TechProgressModule,
-    ExercisesModule,
-    UsersProjectsModule,
-    UsersLevelsModule,
-    // UsersExercisesModule,
-    UsersEventsModule,
-    EventsModule,
-    RankProgressModule,
-    //UsersPointsModule,
-    UsersBadgeModule,
-    UsersTechProgressModule,
-    ExercisesSubmissionsModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                type: "postgres",
+                url: configService.get<string>("DATABASE_URL"),
+                autoLoadEntities: true,
+                synchronize: true,
+            }),
+        }),
+        UsersModule,
+        AuthModule,
+        BadgesModule,
+        LevelsModule,
+        ProjectsModule,
+        TechProgressModule,
+        ExercisesModule,
+        UsersProjectsModule,
+        UsersLevelsModule,
+        // UsersExercisesModule,
+        UsersEventsModule,
+        EventsModule,
+        RankProgressModule,
+        //UsersPointsModule,
+        UsersBadgeModule,
+        UsersTechProgressModule,
+        ExercisesSubmissionsModule,
+    ],
+    controllers: [AppController],
+    providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
