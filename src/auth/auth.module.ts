@@ -7,9 +7,6 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './utils/LocalStrategy';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import * as dotenv from "dotenv"
-
-dotenv.config()
 
 @Module({
     imports: [
@@ -29,4 +26,4 @@ dotenv.config()
     controllers: [AuthController],
     exports: [AuthService]
 })
-export class AuthModule { }
+export class AuthModule {}

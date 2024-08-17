@@ -1,22 +1,30 @@
-import { Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import { UserTechProgress } from "./user-tech-progress.entity"
+import {
+  Column,
+  Entity,
+  JoinTable,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { UserTechProgress } from "./user-tech-progress.entity";
 
 @Entity("tech_progress")
 export class TechProgress {
-
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
-  name: string
+  name: string;
 
-  @Column({ type: "int", default: 0})
-  level: number
+  @Column({ type: "int", default: 0 })
+  level: number;
 
   @Column({ type: "int" })
-  xpToUpgrade: number
+  xpToUpgrade: number;
 
-  @OneToMany(() => UserTechProgress, usersTechProgress => usersTechProgress.user)
+  @OneToMany(
+    () => UserTechProgress,
+    (usersTechProgress) => usersTechProgress.user
+  )
   @JoinTable()
-  usersTechProgress: UserTechProgress[]
+  usersTechProgress: UserTechProgress[];
 }

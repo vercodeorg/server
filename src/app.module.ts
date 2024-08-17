@@ -38,7 +38,6 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
         }),
         UsersModule,
         AuthModule,
-
         BadgesModule,
         LevelsModule,
         ProjectsModule,

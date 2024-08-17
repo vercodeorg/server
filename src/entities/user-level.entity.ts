@@ -5,16 +5,15 @@ import { Level } from "./level.entity";
 
 @Entity("users_levels")
 export class UserLevel {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number
+  @Column({ type: "enum", enum: Status, default: Status.BLOCKED })
+  status: Status;
 
-    @Column({type: "enum", enum: Status, default: Status.BLOCKED})
-    status: Status
+  @ManyToOne(() => User, (user) => user.usersLevels)
+  user: User;
 
-    @ManyToOne(() => User, user => user.usersLevels)
-    user: User
-
-    @ManyToOne(() => Level, level => level.usersLevels)
-    level: Level
+  @ManyToOne(() => Level, (level) => level.usersLevels)
+  level: Level;
 }

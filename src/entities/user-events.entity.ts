@@ -4,23 +4,21 @@ import { Event } from "./event.entity";
 
 @Entity("users_events")
 export class UserEvents {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number
+  @Column({ name: "coins_received", type: "int" })
+  coinsReceived: number;
 
-    @Column({name: "coins_received", type: "int"})
-    coinsReceived: number
-    
-    @Column({name: "xp_received", type: "int"})
-    xpReceived: number
+  @Column({ name: "xp_received", type: "int" })
+  xpReceived: number;
 
-    @Column({type: "date"})
-    date: string
+  @Column({ type: "date" })
+  date: string;
 
-    @ManyToOne(() => User, user => user.usersEvents)
-    user: User
+  @ManyToOne(() => User, (user) => user.usersEvents)
+  user: User;
 
-    @ManyToOne(() => Event, event => event.usersEvents)
-    event: Event
-
+  @ManyToOne(() => Event, (event) => event.usersEvents)
+  event: Event;
 }

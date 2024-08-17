@@ -4,16 +4,18 @@ import { User } from "./user.entity";
 
 @Entity("users_tech_progress")
 export class UserTechProgress {
-
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
-  @Column({type: "int", name: "xp_points", default: 0})
-  xpPoints: number
+  @Column({ type: "int", name: "xp_points", default: 0 })
+  xpPoints: number;
 
-  @ManyToOne(() => User, user => user.usersTechProgress)
-  user: User
+  @ManyToOne(() => User, (user) => user.usersTechProgress)
+  user: User;
 
-  @ManyToOne(() => TechProgress, techProgress => techProgress.usersTechProgress)
-  techProgress: TechProgress
+  @ManyToOne(
+    () => TechProgress,
+    (techProgress) => techProgress.usersTechProgress
+  )
+  techProgress: TechProgress;
 }
